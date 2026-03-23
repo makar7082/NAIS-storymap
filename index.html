@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Native American Studies Programs</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --soil: #2C1A0E;
+    --cedar: #5C3D2E;
+    --sand: #E8D5B0;
+    --sage: #7A9E7E;
+    --sky: #A3C4BC;
+    --ember: #C4622D;
+    --parchment: #F5EDD6;
+    --ink: #1A1208;
+  }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle woven texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(92,61,46,0.03) 3px, rgba(92,61,46,0.03) 4px),
+      repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(92,61,46,0.03) 3px, rgba(92,61,46,0.03) 4px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 20px 48px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--cedar);
+    position: relative;
+  }
+
+  .header::after {
+    content: '◆ ◆ ◆';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--parchment);
+    padding: 0 12px;
+    color: var(--ember);
+    font-size: 10px;
+    letter-spacing: 4px;
+  }
+
+  .eyebrow {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 600;
+    color: var(--soil);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--cedar);
+    font-style: italic;
+  }
+
+  /* Institution grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: white;
+    border: 1.5px solid var(--sand);
+    border-radius: 6px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--sand);
+    transition: background 0.2s;
+  }
+
+  .card:hover, .card.active {
+    border-color: var(--cedar);
+    box-shadow: 0 4px 20px rgba(44,26,14,0.12);
+    transform: translateY(-2px);
+  }
+
+  .card.active::before { background: var(--ember); }
+  .card:hover::before { background: var(--sage); }
+
+  .card-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 6px;
+  }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--soil);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .card-location {
+    font-size: 12px;
+    color: var(--cedar);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--sand);
+    color: var(--cedar);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin: 2px 2px 0 0;
+  }
+
+  .tag.peer { background: #E8F0EE; color: var(--sage); }
+
+  /* Detail panel */
+  .detail-panel {
+    background: white;
+    border: 1.5px solid var(--cedar);
+    border-radius: 8px;
+    overflow: hidden;
+    display: none;
+    animation: slideDown 0.25s ease;
+  }
+
+  .detail-panel.visible { display: block; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-header {
+    background: var(--soil);
+    color: var(--sand);
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .panel-subtitle {
+    font-size: 12px;
+    color: var(--sky);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  .close-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--sand);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+
+  .close-btn:hover { background: rgba(255,255,255,0.2); }
+
+  .panel-body {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 560px) {
+    .panel-body { grid-template-columns: 1fr; }
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--sand);
+  }
+
+  .program-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--parchment);
+    border: 1px solid var(--sand);
+    border-radius: 4px;
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: var(--soil);
+    font-weight: 500;
+    width: 100%;
+  }
+
+  .program-type .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ember);
+    flex-shrink: 0;
+  }
+
+  .course-list {
+    list-style: none;
+  }
+
+  .course-list li {
+    font-size: 12.5px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--sand);
+    color: var(--ink);
+    line-height: 1.4;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .course-list li:last-child { border-bottom: none; }
+
+  .course-list li::before {
+    content: '→';
+    color: var(--sage);
+    font-size: 11px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .visit-link {
+    display: block;
+    text-align: center;
+    margin: 0 24px 20px;
+    padding: 10px;
+    background: var(--parchment);
+    border: 1px solid var(--sand);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--ember);
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.15s;
+  }
+
+  .visit-link:hover {
+    background: var(--ember);
+    color: white;
+    border-color: var(--ember);
+  }
+
+  .note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--cedar);
+    font-style: italic;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <div class="eyebrow">Academic Programs</div>
+    <h1>Native American &amp; Indigenous Studies</h1>
+    <p class="subtitle">Peer institutions offering a standalone major — select one to explore</p>
+  </div>
+
+  <div class="grid" id="cardGrid"></div>
+  <div class="detail-panel" id="detailPanel"></div>
+
+  <p class="note">Program details current as of 2025–2026. Click any institution card to explore its offerings.</p>
+</div>
+
+<script>
+const institutions = [
+  {
+    id: "dartmouth",
+    short: "Dartmouth",
+    name: "Dartmouth College",
+    location: "Hanover, New Hampshire",
+    type: "WashU Peer",
+    programLabel: "Major + Minor",
+    programs: [
+      "B.A. in Native American & Indigenous Studies",
+      "Minor in Native American & Indigenous Studies"
+    ],
+    dept: "Dept. of Native American & Indigenous Studies (est. as dept. 2021)",
+    courses: [
+      "Perspectives in Native American Studies (NAIS 8) — required gateway",
+      "The Invasion of America: American Indian History Pre-Contact to 1800",
+      "Indigenous Environmental Studies",
+      "Settler Colonialism: Theory, History, Present",
+      "Gender Topics in Native American Life",
+      "Native American Literature and the Law",
+      "Ecology, Sovereignty & Contemporary Art in Oceania",
+      "Pen & Ink Witchcraft: Native American History Through Treaties (seminar)"
+    ],
+    url: "https://native-american.dartmouth.edu/undergraduate/major-and-minor"
+  },
+  {
+    id: "stanford",
+    short: "Stanford",
+    name: "Stanford University",
+    location: "Stanford, California",
+    type: "WashU Peer",
+    programLabel: "Major + Minor",
+    programs: [
+      "B.A. in Native American Studies",
+      "Minor in Native American Studies"
+    ],
+    dept: "Center for Comparative Studies in Race & Ethnicity (CCSRE)",
+    courses: [
+      "Decolonizing Methodologies: Introduction to Native American Studies",
+      "Major Problems in Native American History",
+      "Indigenous Feminisms",
+      "Tribal Food Sovereignty",
+      "Psychology & American Indian/Alaska Native Mental Health",
+      "Community & Nation Building and Peacemaking in Native North America",
+      "Decolonizing Language in the Indigenous Classroom",
+      "Indigenous language courses: Lakota, Diné, Hawaiian, Nahuatl, Samoan"
+    ],
+    url: "https://ccsre.stanford.edu/academic-programs/native-american-studies"
+  },
+  {
+    id: "uw",
+    short: "UW",
+    name: "University of Washington",
+    location: "Seattle, Washington",
+    type: "WashU Peer",
+    programLabel: "Major + Minor + Grad Certificate",
+    programs: [
+      "B.A. in American Indian Studies",
+      "Minor in American Indian Studies",
+      "Graduate Certificate in American Indian & Indigenous Studies"
+    ],
+    dept: "Dept. of American Indian Studies — largest program in the Pacific Northwest",
+    courses: [
+      "Introduction to American Indian Studies (AIS 102)",
+      "The Indigenous Pacific Northwest",
+      "Introduction to American Indian Histories",
+      "American Indian Art and Aesthetics",
+      "American Indian & Indigenous Storytelling",
+      "Indigenous Public History",
+      "Critical Theories in American Indian & Indigenous Studies",
+      "Indigenous Methodology"
+    ],
+    url: "https://ais.washington.edu/undergraduate-programs"
+  },
+  {
+    id: "siue",
+    short: "SIUE",
+    name: "Southern Illinois Univ. Edwardsville",
+    location: "Edwardsville, Illinois",
+    type: "St. Louis Region",
+    programLabel: "Minor in NAS",
+    programs: ["Minor in Native American Studies"],
+    dept: "College of Arts & Sciences — Interdisciplinary",
+    courses: [
+      "Introduction to Native American Studies (IS 305)",
+      "Native American History",
+      "Indigenous Cultures of North America (Anthropology)",
+      "Archaeology of Native North America",
+      "Indigenous Knowledge & Environmental Sustainability",
+      "Electives in History, Anthropology & Interdisciplinary Studies"
+    ],
+    url: "https://www.siue.edu/arts-and-sciences/native-american-studies/"
+  }
+];
+
+const tagColors = {
+  "WashU Peer": "peer",
+  "St. Louis Region": ""
+};
+
+function renderCards() {
+  const grid = document.getElementById('cardGrid');
+  grid.innerHTML = institutions.map(inst => `
+    <div class="card" id="card-${inst.id}" onclick="showDetail('${inst.id}')">
+      <div class="card-label">${inst.type}</div>
+      <div class="card-name">${inst.short === "SIUE" ? inst.name : inst.short}</div>
+      <div class="card-location">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="4" r="2" stroke="#5C3D2E" stroke-width="1.2"/><path d="M5 9C5 9 2 6.5 2 4a3 3 0 016 0C8 6.5 5 9 5 9z" stroke="#5C3D2E" stroke-width="1.2" fill="none"/></svg>
+        ${inst.location}
+      </div>
+      <span class="tag ${tagColors[inst.type] || ''}">${inst.programLabel}</span>
+    </div>
+  `).join('');
+}
+
+function showDetail(id) {
+  const inst = institutions.find(i => i.id === id);
+  if (!inst) return;
+
+  // Toggle cards
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+  document.getElementById('card-' + id).classList.add('active');
+
+  const panel = document.getElementById('detailPanel');
+  panel.innerHTML = `
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">${inst.name}</div>
+        <div class="panel-subtitle">${inst.dept}</div>
+      </div>
+      <button class="close-btn" onclick="closePanel()" aria-label="Close">✕</button>
+    </div>
+    <div class="panel-body">
+      <div>
+        <div class="section-label">Programs Offered</div>
+        ${inst.programs.map(p => `<div class="program-type"><span class="dot"></span>${p}</div>`).join('')}
+      </div>
+      <div>
+        <div class="section-label">Sample Course Offerings</div>
+        <ul class="course-list">
+          ${inst.courses.map(c => `<li>${c}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+    <a class="visit-link" href="${inst.url}" target="_blank" rel="noopener">View Full Program Details ↗</a>
+  `;
+
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closePanel() {
+  document.getElementById('detailPanel').classList.remove('visible');
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+}
+
+renderCards();
+</script>
+</body>
+</html>
