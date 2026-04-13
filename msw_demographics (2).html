@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WashU MSW Program Demographics</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5ede0;
+    margin: 0;
+    padding: 40px;
+    max-width: 800px;
+  }
+  h2 { font-size: 18px; font-weight: 500; color: #2a2a2a; margin: 0 0 6px; }
+  .subtitle { font-size: 13px; color: #7a6a5a; margin: 0 0 28px; }
+  .legend { display: flex; gap: 20px; margin-bottom: 16px; font-size: 13px; color: #555; }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 2px; }
+  .chart-wrap { position: relative; width: 100%; height: 300px; }
+  .source { font-size: 11px; color: #aaa; margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<h2>AIAN enrollment in WashU's MSW program</h2>
+<p class="subtitle">Brown School MSW program enrollment by race/ethnicity — AIAN students represent 1.9% of the program</p>
+
+<div class="legend">
+  <span><span class="dot" style="background:#D85A30;"></span>AIAN</span>
+  <span><span class="dot" style="background:#888780;"></span>All other groups</span>
+</div>
+
+<div class="chart-wrap">
+  <canvas id="chart" role="img" aria-label="Horizontal bar chart of WashU MSW program enrollment by race. AIAN is 1.9%, highlighted in orange. White/Non-Hispanic leads at 44.7%.">White/Non-Hispanic 44.7%, International 20.3%, Black 17%, Hispanic 7.4%, Asian 4.2%, Two or more 2.9%, AIAN 1.9%, Not reported 1.6%.</canvas>
+</div>
+
+<p class="source">Source: Washington University in St. Louis Brown School MSW program enrollment data</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+new Chart(document.getElementById('chart'), {
+  type: 'bar',
+  data: {
+    labels: ['White/Non-Hispanic','International','Black/African Am.','Hispanic/Latino','Asian','Two+ races','AIAN','Not reported'],
+    datasets: [{
+      data: [44.7, 20.3, 17.0, 7.4, 4.2, 2.9, 1.9, 1.6],
+      backgroundColor: ['#888780','#888780','#888780','#888780','#888780','#888780','#D85A30','#888780'],
+      borderWidth: 0,
+      borderRadius: 3
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.x.toFixed(1) + '%' } }
+    },
+    scales: {
+      x: { ticks: { callback: v => v + '%', font: { size: 12 } }, grid: { color: 'rgba(0,0,0,0.07)' } },
+      y: { ticks: { font: { size: 13 } }, grid: { display: false } }
+    }
+  }
+});
+</script>
+</body>
+</html>
